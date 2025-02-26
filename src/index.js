@@ -1,26 +1,18 @@
-import dotenv from "dotenv"
+import dotenv from "dotenv";
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
+dotenv.config();
 
-
-dotenv.config()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-connectDB();
-
+connectDB()
+  .then(() => {
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server is running at http://locaalhost:${process.env.PORT}`);
+    });
+  })
+  .catch(() => {
+    console.log("MongoDB Connection FAILED");
+  });
 
 /*
 import express from "express";
