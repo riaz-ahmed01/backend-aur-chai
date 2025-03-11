@@ -1,5 +1,6 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import path from "path";
 
 // Configuration
 cloudinary.config({
@@ -8,26 +9,34 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-/*************  ✨ Codeium Command ⭐  *************/
-/**
-     * Uploads a file from a local path to Cloudinary
-/******  79badca3-d036-4f33-9ef1-1fe3c54b51e1  *******/
+
+// Uploads a file from a local path to Cloudinary
+
 const uploadOnCloudinary = async (localFilePath) => {
   try {
-    if (!localFilePath) return null;
-    // upload File on Cloudinary
+      if (!localFilePath) return null
+      //upload the file on cloudinary
+      const response = await cloudinary.uploader.upload(localFilePath, {
+          resource_type: "image"
+      })
+      // file has been uploaded successfull
 
-    const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: "auto",
-    });
+      console.log("file is uploaded on cloudinary ", response.url);
+      // fs.unlinkSync(localFilePath)
+      return response;
 
-    // file has been upload on cloudinary
-    console.log("file is upload on cloudinary", response.url);
-    return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); //remove the locally saved temporary file as the upload operation got failed
-    return null;
-  }
-};
 
-export { uploadOnCloudinary}
+    console.error("Cloudinary Upload Error:", error);
+
+      // fs.unlinkSync(localFilePath)
+
+       // remove the locally saved temporary file as the upload operation got failed
+       
+      return null;
+  }
+}
+
+
+
+export {uploadOnCloudinary}
